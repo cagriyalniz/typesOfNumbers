@@ -1,17 +1,31 @@
-NAME = numbers.a
-FLAG = -Wall -Wextra -Werror
+NAME = numbers
 SRC = $(shell find . -name "*.c")
+INC		= header.h
+
+CC		= gcc
+RM		= rm -rf
+CFLAGS	= -Wall -Wextra -Werror
+
+OBJ	= $(SRC:.c=.o)
+
+%.o:%.c $(INC)
+	$(CC) $(CFLAGS) -c $< -o $@
 
 all: $(NAME)
 
-$(NAME):
-	gcc $(FLAG) -c $(SRC)
-	ar rc $(NAME) *.o
+$(NAME): $(OBJ)
+	ar -rcs $(NAME).a $(OBJ)
+
 clean:
-	rm -f  *.o
-fclean: clean
-	rm -f $(NAME)
+	$(RM) $(OBJ) $(B_OBJ)
+
+fclean:	clean
+	$(RM) $(NAME).a
 
 re: fclean all
 
-.PHONY: all clean fclean re
+bonus:			$(OBJ)	$(B_OBJ)
+					ar -rcs $(NAME).a $(OBJ) $(B_OBJ)
+
+
+.PHONY:			all, clean, fclean, re
